@@ -1,7 +1,7 @@
-# cmds.cr
+# cmds.cr [![Build Status](https://travis-ci.org/maiha/cmds.cr.svg?branch=master)](https://travis-ci.org/maiha/cmds.cr)
 
-Yet another CLI Builder library for [Crystal](http://crystal-lang.org/).
-- crystal: 0.26.1
+Yet another CLI Builder library for [Crystal](http://crystal-lang.org/)
+(0.26.1).
 
 ### features
 - Simple and readable syntax for **command** and **task**
@@ -9,7 +9,11 @@ Yet another CLI Builder library for [Crystal](http://crystal-lang.org/).
 - Automatic generation of task candidates
 - Automatic generation of usages
 
+## Usage
+
 ```crystal
+require "cmds"
+
 Cmds.command "json" do
   usage "pretty file.json"
 
@@ -42,12 +46,6 @@ dependencies:
   cmds:
     github: maiha/cmds.cr
     version: 0.1.0
-```
-
-## Usage
-
-```crystal
-require "cmds"
 ```
 
 ## Development
