@@ -29,12 +29,15 @@ Cmds.run(ARGV)
 ```console
 $ prog
 Error: unknown command: ''
-Possible commands are: json
+Possible commands are: ["json"]
 
 $ prog json
 Error: unknown task: ''
-Possible commands are: ["pretty"]
-  ./prog json pretty file.json
+Possible tasks are: ["pretty"]
+  prog json pretty file.json
+
+$ prog json pretty
+specify file
 ```
 
 ## Installation

@@ -40,7 +40,7 @@ describe Cmds do
     shell.success?.should be_false
     remove_ansi_color(shell.stderr).chomp.should eq <<-EOF
       Error: unknown task: 'xxx'
-      Possible commands are: ["fails", "pretty"]
+      Possible tasks are: ["fails", "pretty"]
         ./prog json pretty file.json
         ./prog json fails
       EOF
@@ -52,7 +52,7 @@ describe Cmds do
     shell.success?.should be_false
     remove_ansi_color(shell.stderr).chomp.should eq <<-EOF
       Error: unknown command: 'foo'
-      Possible commands are: json
+      Possible commands are: ["json"]
       EOF
   end
 end
