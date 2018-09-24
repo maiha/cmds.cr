@@ -7,13 +7,34 @@ Yet another CLI Builder library for [Crystal](http://crystal-lang.org/)
 - Simple and readable syntax for **command** and **task**
 - Automatic generation of command candidates
 - Automatic generation of task candidates
-- Automatic generation of usages
+- Around filter to commands
 
 ## Usage
 
-```crystal
-require "cmds"
+### hello world
 
+Writing logics into `run` method provides a command.
+
+```crystal
+Cmds.command "hello" do
+  def run
+    puts "Hello world!"
+  end
+end
+
+Cmds.run(ARGV)
+```
+
+```console
+$ prog hello
+Hello world!
+```
+
+### with tasks
+
+Writing logics as `task` provides sub commands.
+
+```crystal
 Cmds.command "json" do
   usage "pretty file.json"
 
@@ -40,6 +61,11 @@ $ prog json pretty
 specify file
 ```
 
+### around filter
+
+`before` and `after` methods will be automatically fired.
+See [examples/hello.cr](./examples/hello.cr).
+
 ## Installation
 
 Add this to your application's `shard.yml`:
@@ -49,6 +75,10 @@ dependencies:
   cmds:
     github: maiha/cmds.cr
     version: 0.1.1
+```
+
+```crystal
+require "cmds"
 ```
 
 ## Development

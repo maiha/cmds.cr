@@ -16,6 +16,7 @@ module Cmds
     class ::Cmds::{{name_s.gsub(/\./,"_").camelcase.id}}Cmd < ::Cmds::Cmd
       NAME = {{name_s}}
       ::Cmds.register({{name_s}}, self)
+
       {{ yield }}
     end
   end
@@ -39,7 +40,7 @@ module Cmds
     CMDS[name]?
   end
 
-  def self.run(args = nil)
+  def self.run(args = ARGV)
     Cli::Default.run(args)
   end
 end

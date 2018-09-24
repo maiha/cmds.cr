@@ -7,12 +7,14 @@ GUESSED_VERSION=$(shell git tag -l | sort -V | tail -1 | awk 'BEGIN { FS="." } {
 .SHELLFLAGS = -o pipefail -c
 
 .PHONY : test
-test: check_version_mismatch prog spec
+test: check_version_mismatch examples spec
 
-.PHONY : prog
-prog: examples/prog.cr
-	rm -f prog
-	crystal build $^
+.PHONY : examples
+examples:
+	@mkdir -p tmp
+	@for cr in examples/*.cr; do \
+	  crystal build $$cr -o tmp/`basename $$cr .cr`; \
+	done
 
 .PHONY : spec
 spec:

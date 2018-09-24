@@ -1,4 +1,4 @@
-module Cmds::Task
+module Cmds
   enum State
     BEFORE
     RUNNING

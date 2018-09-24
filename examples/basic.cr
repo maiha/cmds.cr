@@ -16,4 +16,4 @@ Cmds.command "json" do
   end
 end
 
-Cmds.run(ARGV)
+Cmds.run

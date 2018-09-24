@@ -1,7 +1,7 @@
 abstract class Cmds::Cmd
   var args   : ::Array(String)
   var task_name : ::String
-  var task_state : Task::State = Task::State::BEFORE
+  var task_state : Cmds::State = Cmds::State::BEFORE
   var error  : Exception
 
   NAME = "(name not found)"
@@ -13,7 +13,7 @@ abstract class Cmds::Cmd
   end
 
   def finished!(msg = nil)
-    self.task_state = Task::State::FINISHED
+    self.task_state = Cmds::State::FINISHED
     raise Cli::Finished.new(msg)
   end
 
@@ -28,8 +28,7 @@ abstract class Cmds::Cmd
 
   def self.run(args : Array(String))
     c = new
-    c.args = args
-    c.run
+    c.run(args)
     return c
   end
 
@@ -69,18 +68,22 @@ abstract class Cmds::Cmd
     return array
   end
 
-  def run(args : Array(String))
-    self.args = args
-    run
+  def run
+    self.task_name = args.shift? || build_task_name
+    invoke_task(task_name)
   end
 
-  def run
-    self.task_name = args.shift? || raise TaskNotFound.new("", self)
-    self.task_state = Task::State::BEFORE
+  protected def build_task_name
+    raise TaskNotFound.new("", self)
+  end
+
+  def run(args : Array(String))
+    self.args = args
+    self.task_state = Cmds::State::BEFORE
     before
-    self.task_state = Task::State::RUNNING
-    invoke_task(task_name)
-    self.task_state = Task::State::FINISHED
+    self.task_state = Cmds::State::RUNNING
+    run
+    self.task_state = Cmds::State::FINISHED
   rescue err
     self.error = err
     raise err

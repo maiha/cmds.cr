@@ -1,7 +1,7 @@
 abstract class Cmds::Cli
   macro inherited
-    def self.run(args = nil)
-      new.run(args || ARGV)
+    def self.run(args = ARGV)
+      new.run(args)
     end
   end
 
