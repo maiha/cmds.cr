@@ -28,12 +28,12 @@ module Cmds
     CMDS[name] = cmd
   end
 
-  def self.command_names : Array(String)
+  def self.names : Array(String)
     CMDS.keys.sort
   end
   
   def self.[](name)
-    self[name.to_s]? || raise CommandNotFound.new(name.to_s, command_names)
+    self[name.to_s]? || raise CommandNotFound.new(name.to_s, names)
   end  
 
   def self.[]?(name : String)
