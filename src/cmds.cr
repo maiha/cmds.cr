@@ -28,7 +28,7 @@ module Cmds
     CMDS[name] = cmd
   end
 
-  def self.command_names : Array(String)
+  def self.names : Array(String)
     CMDS.keys.sort
   end
   
