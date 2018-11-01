@@ -79,7 +79,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   cmds:
     github: maiha/cmds.cr
-    version: 0.2.2
+    version: 0.3.0
 ```
 
 ```crystal
