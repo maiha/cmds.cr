@@ -13,6 +13,22 @@ describe "(basic usage)" do
       EOF
   end
 
+  it "uses the first arg as `task_name`" do
+    run!("basic json inspect").stdout.should eq <<-EOF
+      task_name=inspect
+      args=[]
+
+      EOF
+  end
+
+  it "uses the rest args as `args`" do
+    run!("basic json inspect 1 2").stdout.should eq <<-EOF
+      task_name=inspect
+      args=["1", "2"]
+
+      EOF
+  end
+  
   it "exits with the message when abort is fired" do
     shell = run("basic json pretty")
     shell.success?.should be_false
@@ -30,7 +46,7 @@ describe "(basic usage)" do
     shell.success?.should be_false
     remove_ansi_color(shell.stderr).should eq <<-EOF
       Error: unknown task: 'xxx'
-      Possible tasks are: ["fails", "pretty"]
+      Possible tasks are: ["fails", "inspect", "pretty"]
         ./tmp/basic json pretty file.json
         ./tmp/basic json fails
 

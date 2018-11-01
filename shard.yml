@@ -10,7 +10,7 @@ dependencies:
     version: ">= 0.6.0"
   var:
     github: maiha/var.cr
-    version: ">= 1.0.0"
+    version: ">= 1.2.0"
 
 development_dependencies:
   shell:

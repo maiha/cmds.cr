@@ -30,6 +30,11 @@ $ prog hello
 Hello world!
 ```
 
+### with args
+
+- `args[0]` is automatically saved as `task_name`
+- `args[1..-1]` can be used as `args`
+
 ### with tasks
 
 Writing logics as `task` provides sub commands.
