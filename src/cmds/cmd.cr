@@ -13,9 +13,9 @@ abstract class Cmds::Cmd
   def after
   end
 
-  def finished!(msg = nil)
+  def finished!(msg : String = "")
     self.task_state = Cmds::State::FINISHED
-    raise Cli::Finished.new(msg)
+    raise Cmds::Finished.new(msg)
   end
 
   def abort(msg)
@@ -93,6 +93,8 @@ abstract class Cmds::Cmd
     self.task_state = Cmds::State::RUNNING
     run
     self.task_state = Cmds::State::FINISHED
+  rescue Cmds::Finished
+    # successfully done
   rescue err
     self.error = err
     raise err
