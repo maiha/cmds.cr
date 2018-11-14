@@ -15,6 +15,7 @@ describe "(basic usage)" do
 
   it "uses the first arg as `task_name`" do
     run!("basic json inspect").stdout.should eq <<-EOF
+      task_name(before)=inspect
       task_name=inspect
       args=[]
 
@@ -23,6 +24,7 @@ describe "(basic usage)" do
 
   it "uses the rest args as `args`" do
     run!("basic json inspect 1 2").stdout.should eq <<-EOF
+      task_name(before)=inspect
       task_name=inspect
       args=["1", "2"]
 

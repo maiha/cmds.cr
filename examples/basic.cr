@@ -22,6 +22,7 @@ Cmds.command "json" do
   end
 
   task "inspect" do
+    puts "task_name(before)=#{task_name_in_before}"
     puts "task_name=#{task_name}"
     puts "args=#{args.inspect}"
   end
