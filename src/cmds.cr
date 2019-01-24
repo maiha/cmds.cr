@@ -1,5 +1,6 @@
 # lib
 require "levenshtein"
+require "logger"
 
 # shards
 require "pretty"
@@ -16,6 +17,8 @@ module Cmds
     class ::Cmds::{{name_s.gsub(/\./,"_").camelcase.id}}Cmd < ::Cmds::Cmd
       NAME = {{name_s}}
       ::Cmds.register({{name_s}}, self)
+
+      include ::Cmds::Cmd::DefaultActions
 
       {{ yield }}
     end

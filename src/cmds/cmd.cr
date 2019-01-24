@@ -2,24 +2,56 @@ abstract class Cmds::Cmd
   var args   : ::Array(String)
   var task_state : Cmds::State = Cmds::State::BEFORE
   var error  : Exception
+  var logger = Logger.new(STDOUT)
 
-  @task_name : ::String?
+  var task_name : ::String
 
   NAME = "(name not found)"
 
-  def before
+  def self.cmd_name
+    NAME
   end
 
-  def after
+  def task_name
+    @task_name || raise TaskNotFound.new("", self)
   end
 
-  def finished!(msg : String = "")
-    self.task_state = Cmds::State::FINISHED
-    raise Cmds::Finished.new(msg)
-  end
+  module DefaultActions
+    def before
+    end
 
-  def abort(msg)
-    raise Abort.new(msg)
+    def after
+    end
+
+    def run
+      invoke_task(task_name)
+    end
+
+    def run(args : Array(String))
+      self.args = args
+      self.task_state = Cmds::State::BEFORE
+      self.task_name = args.shift?
+      before
+      self.task_state = Cmds::State::RUNNING
+      run
+      self.task_state = Cmds::State::FINISHED
+    rescue Cmds::Finished
+      # successfully done
+    rescue err
+      self.error = err
+      raise err
+    ensure
+      after
+    end
+
+    def finished!(msg : String = "")
+      self.task_state = Cmds::State::FINISHED
+      raise Cmds::Finished.new(msg)
+    end
+
+    def abort(msg)
+      raise Abort.new(msg)
+    end
   end
 
   # should be overriden in inherited macro
@@ -69,40 +101,21 @@ abstract class Cmds::Cmd
     return array
   end
 
-  def run
-    invoke_task(task_name)
-  end
-
-  protected def build_task_name
-    raise TaskNotFound.new("", self)
-  end
-
-  protected def task_name : String
-    @task_name || build_task_name
-  end
-
-  protected def task_name? : String?
-    @task_name
-  end
-
-  def run(args : Array(String))
-    self.args = args
-    self.task_state = Cmds::State::BEFORE
-    @task_name = args.shift?
-    before
-    self.task_state = Cmds::State::RUNNING
-    run
-    self.task_state = Cmds::State::FINISHED
-  rescue Cmds::Finished
-    # successfully done
-  rescue err
-    self.error = err
-    raise err
-  ensure
-    after
-  end
+  {% for name in Logger::Severity.constants %}
+    private def {{name.id.downcase}}(message)
+      name = String.build do |s|
+        s << self.class.cmd_name
+        s << " " << task_name if task_name?
+      end
+      logger.{{name.id.downcase}}(message, name)
+    end
+  {% end %}
 
   macro inherited
+    def self.cmd_name
+      NAME
+    end
+
     def self.pretty_usage(prefix : String = "", delimiter : String = " ")
       array = usages.map{|i| [prefix + PROGRAM_NAME, NAME, i]}
       Pretty.lines(array, delimiter: delimiter)
