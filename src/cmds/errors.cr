@@ -1,9 +1,15 @@
 module Cmds
-  klass Finished        < Exception
-  klass Abort           < Exception
-  klass ArgumentError   < Exception
+  class Finished        < Exception; end
+  class Abort           < Exception; end
+  class ArgumentError   < Exception; end
 
-  klass CommandNotFound < Exception, name : String, possible : Array(String) do
+  class CommandNotFound < Exception
+    getter name : String
+    getter possible : Array(String)
+
+    def initialize(@name, @possible)
+    end
+    
     def to_s(io : IO)
       io <<
         if name.empty?
@@ -19,7 +25,13 @@ module Cmds
     end
   end
 
-  klass TaskNotFound < Exception, name : String, cmd : Cmd do
+  class TaskNotFound < Exception
+    getter name : String
+    getter cmd  : Cmd
+
+    def initialize(@name, @cmd)
+    end
+    
     delegate cmd_name, task_names, pretty_usage, to: cmd.class
 
     def to_s(io : IO)
