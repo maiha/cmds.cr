@@ -1,10 +1,15 @@
 abstract class Cmds::Cmd
-  var args   : ::Array(String)
-  var task_state : Cmds::State = Cmds::State::BEFORE
-  var error  : Exception
-  var logger = Logger.new(STDOUT)
+  var args          : ::Array(String)
+  var original_args : ::Array(String)
+  var read_arg_idx  : ::Int32       = 0
+  var task_state    : ::Cmds::State = ::Cmds::State::BEFORE
+  var error         : ::Exception
+  var logger        : ::Logger      = ::Logger.new(STDOUT)
 
   var task_name : ::String
+  var prog_name : ::String = PROGRAM_NAME
+
+  ARGS_HINTS = Hash(String, String?).new
 
   NAME = "(name not found)"
 
@@ -31,12 +36,16 @@ abstract class Cmds::Cmd
       self.args = args
       self.task_state = Cmds::State::BEFORE
       self.task_name = args.shift?
+      self.original_args = args.dup
       before
       self.task_state = Cmds::State::RUNNING
       run
       self.task_state = Cmds::State::FINISHED
     rescue Cmds::Finished
       # successfully done
+    rescue err : Cmds::ArgumentError
+      STDERR.puts err.to_s
+      exit 1
     rescue err
       self.error = err
       raise err
@@ -73,10 +82,13 @@ abstract class Cmds::Cmd
     usages << v
   end
 
-  macro task(name)
-    def task__{{name.id.stringify.gsub(/\./,"__").id}}
+  macro task(name, args_hint = nil)
+    {% key = name.id.stringify.gsub(/\./,"__").id %}
+    def task__{{key}}
       {{yield}}
     end
+
+    ::Cmds::Cmd::ARGS_HINTS["{{key}}"] = {{args_hint}}
   end
 
   protected def invoke_task(name : String)
@@ -84,7 +96,7 @@ abstract class Cmds::Cmd
     method_name = "task__" + name.gsub(/\./,"__")
     {% for methods in ([@type] + @type.ancestors).map(&.methods.map(&.name.stringify)) %}
       {% for name in methods.select(&.starts_with?("task__")) %}
-        return {{name.id}}() if method_name == {{name}}
+        return {{name.id}} if method_name == {{name}}
       {% end %}
     {% end %}
     raise TaskNotFound.new(name, self)
@@ -120,5 +132,42 @@ abstract class Cmds::Cmd
       array = usages.map{|i| [prefix + PROGRAM_NAME, NAME, i]}
       Pretty.lines(array, delimiter: delimiter)
     end
+
+    def args_got : Array(String)
+      [prog_name, NAME, task_name] + original_args
+    end
+
+    def args_exp : Array(String)
+      exp = [prog_name, NAME, task_name]
+      if hint = ::Cmds::Cmd::ARGS_HINTS[task_name]
+        exp.concat hint.split(/\s+/)
+      end
+      return exp
+    end
+
+    {% for x in 1..10 %}
+      protected def arg{{x}}? : String?
+        original_args[{{x}}-1]?
+      end
+
+      protected def arg{{x}} : String
+        original_args[{{x}}-1]
+      rescue ::IndexError
+        raise ::Cmds::ArgumentNotFound.new({{x}}-1, args_exp, args_got)
+      end
+
+      protected def arg{{x}}?(&block : String -> U) : U? forall U
+        arg{{x}}?.try{|v| block.call(v)}
+      end
+
+      protected def arg{{x}}(&block : String -> U) : U forall U
+        v = arg{{x}}
+        begin
+          return block.call(v)
+        rescue err
+          raise ::Cmds::ArgumentNotValid.new({{x}}-1, args_exp, args_got, err)
+        end
+      end
+    {% end %}
   end
 end

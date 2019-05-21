@@ -34,6 +34,9 @@ Hello world!
 
 - `args[0]` is automatically saved as `task_name`
 - `args[1..-1]` can be used as `args`
+- `argN` like `arg1`, `arg2` is used for handy accessors
+
+See: [./examples/args.cr](./examples/args.cr)
 
 ### with tasks
 

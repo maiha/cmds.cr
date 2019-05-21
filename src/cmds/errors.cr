@@ -53,4 +53,87 @@ module Cmds
       end
     end
   end
+
+  class ArgumentNotFound < ArgumentError
+    getter idx : Int32
+    getter exp : Array(String)
+    getter got : Array(String)
+
+    def initialize(@idx, @exp, @got)
+    end
+    
+    def usage : String
+      lines = Array(Array(String)).new
+      # expected
+      lines << (["usage:"] + exp)
+      # got
+      lines << ([""] + got)
+      # hint
+      lines << ["", "", "", ""] + exp[3..-1].to_a.map_with_index{|v,i|
+        if i == idx
+          "^" * (exp[3+i]?.try(&.size) || 3)
+        else
+          ""
+        end
+      }
+
+      # fill up to max element size
+      max_element_size = lines.map(&.size).max
+      lines.each do |ary|
+        (max_element_size - ary.size).times do
+          ary << ""
+        end
+      end
+      
+      usage = Pretty.lines(lines, delimiter: " ")
+      return usage
+    end
+
+    def to_s(io : IO)
+      io.puts usage
+      io << "Arg#{idx+1} not found"
+    end
+  end
+
+  class ArgumentNotValid < ArgumentError
+    getter idx : Int32
+    getter exp : Array(String)
+    getter got : Array(String)
+    getter err : Exception
+
+    def initialize(@idx, @exp, @got, @err)
+    end
+    
+    def usage : String
+      lines = Array(Array(String)).new
+      # expected
+      lines << (["usage:"] + exp)
+      # got
+      lines << ([""] + got)
+      # hint
+      lines << ["", "", "", ""] + got[3..-1].to_a.map_with_index{|v,i|
+        if i == idx
+          "^" * (got[3+i]?.try(&.size) || 3)
+        else
+          ""
+        end
+      }
+
+      # fill up to max element size
+      max_element_size = lines.map(&.size).max
+      lines.each do |ary|
+        (max_element_size - ary.size).times do
+          ary << ""
+        end
+      end
+      
+      usage = Pretty.lines(lines, delimiter: " ")
+      return usage
+    end
+
+    def to_s(io : IO)
+      io.puts usage
+      io << @err.to_s
+    end
+  end
 end
