@@ -9,18 +9,18 @@ describe "(args)" do
 
   it "prints usage and missing position when arg not found" do
     run("args math sum 1").stderr.sub(/\s+\Z/m, "").should eq <<-EOF
-      usage: ./tmp/args math sum a b
-             ./tmp/args math sum 1 
-                                   ^
-      Arg2 not found
+      usage: args math sum a b
+             args math sum 1
+
+      missing <arg2>.
       EOF
   end
 
   it "prints usage and invalid position when arg not valid" do
     run("args math sum x 2").stderr.sub(/\s+\Z/m, "").should eq <<-EOF
-      usage: ./tmp/args math sum a b
-             ./tmp/args math sum x 2
-                                 ^ 
+      usage: args math sum a b
+             args math sum x 2
+
       Invalid Int32: x
       EOF
   end

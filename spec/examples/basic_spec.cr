@@ -42,30 +42,5 @@ describe "(basic usage)" do
     shell.success?.should be_false
     remove_ansi_color(shell.stderr).chomp.should match(/unhandled error.*\n\s+from examples/)
   end
-
-  it "fails with usages when the task name is wrong" do
-    shell = run("basic json xxx")
-    shell.success?.should be_false
-    remove_ansi_color(shell.stderr).chomp.should eq <<-EOF
-      fatal: 'xxx' is not a valid task name for the command 'json'.
-      
-      Usage: ./tmp/basic json <<TASK>>
-        fails, inspect, pretty
-      
-      Examples:
-        ./tmp/basic json pretty file.json
-        ./tmp/basic json fails
-      EOF
-  end
-
-  it "fails when the command name is wrong" do
-    shell = run("basic foo")
-    shell.success?.should be_false
-    remove_ansi_color(shell.stderr).chomp.chomp.should eq <<-EOF
-      fatal: 'foo' is not a valid command name.
-      
-      Usage: ./tmp/basic <<COMMAND>>
-        json
-      EOF
-  end
 end
+

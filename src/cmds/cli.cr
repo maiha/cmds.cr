@@ -9,7 +9,10 @@ abstract class Cmds::Cli
     def run(args)
       Cmds[args.shift?].run(args)
     rescue Cmds::Finished
-    rescue err : Cmds::Abort | Cmds::CommandNotFound | Cmds::TaskNotFound
+    rescue err : Cmds::Navigatable
+      STDERR.puts Cmds::Navigator.new.navigate(err)
+      exit err.exit_code
+    rescue err : Cmds::Abort
       STDERR.puts err.to_s.chomp.colorize(:red)
       exit 1
     end

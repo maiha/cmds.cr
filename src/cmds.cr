@@ -7,10 +7,13 @@ require "pretty"
 require "var"
 
 # app
+require "./cmds/navigatable"
 require "./cmds/**"
 
 module Cmds
   CMDS = Hash(String, Cmd.class).new
+
+  PROGRAM = File.basename(PROGRAM_NAME)
 
   macro command(name)
     {% name_s = name.id.stringify %}
@@ -36,7 +39,14 @@ module Cmds
   end
   
   def self.[](name)
-    self[name.to_s]? || raise CommandNotFound.new(name.to_s, names)
+    name = name.to_s
+    if cmd = self[name]?
+      return cmd
+    elsif name.size > 0
+      raise InvalidCommand.new(command: name)
+    else
+      raise MissingCommand.new
+    end
   end  
 
   def self.[]?(name : String)
