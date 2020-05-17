@@ -1,10 +1,9 @@
 SHELL=/bin/bash
 
-VERSION=
-CURRENT_VERSION=$(shell git tag -l | sort -V | tail -1)
-GUESSED_VERSION=$(shell git tag -l | sort -V | tail -1 | awk 'BEGIN { FS="." } { $$3++; } { printf "%d.%d.%d", $$1, $$2, $$3 }')
-
 .SHELLFLAGS = -o pipefail -c
+
+######################################################################
+### examples
 
 .PHONY: examples
 examples:
@@ -13,16 +12,26 @@ examples:
 	  crystal build $$cr -o tmp/`basename $$cr .cr`; \
 	done
 
+######################################################################
+### testing
+
 .PHONY: ci
 ci: check_version_mismatch examples spec
 
-.PHONY: spec
+.PHONY : spec
 spec:
 	crystal spec -v --fail-fast
 
 .PHONY : check_version_mismatch
 check_version_mismatch: shard.yml README.md
 	diff -w -c <(grep version: README.md) <(grep ^version: shard.yml)
+
+######################################################################
+### versioning
+
+VERSION=
+CURRENT_VERSION=$(shell git tag -l | sort -V | tail -1 | sed -e 's/^v//')
+GUESSED_VERSION=$(shell git tag -l | sort -V | tail -1 | awk 'BEGIN { FS="." } { $$3++; } { printf "%d.%d.%d", $$1, $$2, $$3 }')
 
 .PHONY : version
 version:

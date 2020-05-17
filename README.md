@@ -1,7 +1,7 @@
 # cmds.cr [![Build Status](https://travis-ci.org/maiha/cmds.cr.svg?branch=master)](https://travis-ci.org/maiha/cmds.cr)
 
 Yet another CLI Builder library for [Crystal](http://crystal-lang.org/)
-(0.26.1).
+- supported versions** : 0.27.2 0.31.1 0.32.1 0.33.0 0.34.0
 
 ### features
 - Simple and readable syntax for **command** and **task**
@@ -82,7 +82,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   cmds:
     github: maiha/cmds.cr
-    version: 0.3.4
+    version: 0.3.5
 ```
 
 ```crystal
