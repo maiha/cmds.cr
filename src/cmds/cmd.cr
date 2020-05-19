@@ -29,14 +29,18 @@ abstract class Cmds::Cmd
     end
 
     def run
+      # `args[0]` is reserved for `task_name` in task mode
+      self.task_name = args.shift?
+      self.original_args = args.dup
+
       invoke_task(task_name)
     end
 
     def run(args : Array(String))
       self.args = args
       self.task_state = Cmds::State::BEFORE
-      self.task_name = args.shift?
-      self.original_args = args.dup
+      self.task_name = args[0]?
+      self.original_args = args.any? ? args[1..-1] : Array(String).new
       before
       self.task_state = Cmds::State::RUNNING
       run

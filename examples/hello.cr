@@ -3,6 +3,7 @@ require "../src/cmds"
 Cmds.command "world" do
   def run
     puts "Hello world!"
+    puts args.inspect if args.any?
   end
 
   private def before

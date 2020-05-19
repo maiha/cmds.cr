@@ -93,8 +93,6 @@ missing <task>.
 ## Args
 
 - `args : Array(String)` presents CLI args
-- `args[0]` is reserved for `task_name`
-- `args[1..-1]` can be used as `args`
 - `argN` like `arg1`, `arg2` is used for handy accessors
 
 For example, in the case of a `sum` task that returns the addition of two arguments,

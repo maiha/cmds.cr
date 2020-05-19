@@ -9,4 +9,24 @@ describe "(without task)" do
 
       EOF
   end
+
+  it "acceots arg" do
+    run!("hello world foo").stdout.should eq <<-EOF
+      (before)
+      Hello world!
+      ["foo"]
+      (after)
+
+      EOF
+  end
+
+  it "acceots args" do
+    run!("hello world foo bar").stdout.should eq <<-EOF
+      (before)
+      Hello world!
+      ["foo", "bar"]
+      (after)
+
+      EOF
+  end
 end
