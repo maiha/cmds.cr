@@ -15,6 +15,10 @@ module Cmds
       TEMPLATES[key]? || raise Abort.new("navigator: template not found for '#{key}'")
     end
 
+    def navigate
+      Navigator.new.navigate(self)
+    end
+
     def template
       Navigatable.template(self)
     end

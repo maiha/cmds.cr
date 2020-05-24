@@ -67,6 +67,11 @@ abstract class Cmds::Cmd
     end
   end
 
+  # should be overriden in inherited macro
+  def self.pretty_usage(prefix : String = "", delimiter : String = " ")
+    ""
+  end
+
   def self.run(args : Array(String))
     c = new
     c.run(args)
@@ -134,6 +139,11 @@ abstract class Cmds::Cmd
   macro inherited
     def self.cmd_name
       NAME
+    end
+
+    def self.pretty_usage(prefix : String = "", delimiter : String = " ")
+      array = usages.map{|usage| [prefix + PROGRAM_NAME, NAME, usage.text]}
+      Pretty.lines(array, delimiter: delimiter)
     end
 
     def args_got : Array(String)
