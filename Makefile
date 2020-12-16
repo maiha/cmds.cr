@@ -2,6 +2,8 @@ SHELL=/bin/bash
 
 .SHELLFLAGS = -o pipefail -c
 
+SRCS=$(shell find src/ -name '*.cr')
+
 ######################################################################
 ### examples
 
@@ -11,6 +13,10 @@ examples:
 	@for cr in examples/*.cr; do \
 	  crystal build $$cr -o tmp/`basename $$cr .cr`; \
 	done
+
+tmp/%: examples/%.cr $(SRCS)
+	@mkdir -p tmp
+	crystal build "$<" -o "$@"
 
 ######################################################################
 ### testing

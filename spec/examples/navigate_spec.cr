@@ -9,7 +9,12 @@ describe "navigate" do
              navigate ^^^^^^^^^
 
       commands:
-        web
+          calc, todo, web
+
+      examples:
+          navigate calc
+          navigate todo  # manage TODO list
+          navigate web   # web server
 
       missing <command>.
       EOF
@@ -23,7 +28,12 @@ describe "navigate" do
              navigate xxx
       
       commands:
-        web
+          calc, todo, web
+
+      examples:
+          navigate calc
+          navigate todo  # manage TODO list
+          navigate web   # web server
 
       invalid command: 'xxx'
       EOF
@@ -37,7 +47,12 @@ describe "navigate" do
              navigate web ^^^^^^
       
       tasks:
-        run
+          run, start, stop
+
+      examples:
+          navigate web run   0.0.0.0:8180 # run http server
+          navigate web start 0.0.0.0:8180 # start http server
+          navigate web stop               # stop http server
 
       missing <task>.
       EOF
@@ -51,7 +66,12 @@ describe "navigate" do
              navigate web xxx
       
       tasks:
-        run
+          run, start, stop
+
+      examples:
+          navigate web run   0.0.0.0:8180 # run http server
+          navigate web start 0.0.0.0:8180 # start http server
+          navigate web stop               # stop http server
 
       invalid task: 'xxx'
       EOF
@@ -65,7 +85,7 @@ describe "navigate" do
              navigate web run 
 
       examples:
-        navigate web run 0.0.0.0:8180 # run http server
+          navigate web run 0.0.0.0:8180 # run http server
 
       Specify the address and port to listen.
       EOF

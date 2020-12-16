@@ -65,6 +65,10 @@ abstract class Cmds::Cmd
     def abort(msg)
       raise Abort.new(msg)
     end
+
+    def show_usage(msg = nil)
+      raise ShowUsageWithTask.new(command: self.class.cmd_name, task: task_name?, msg: msg)
+    end
   end
 
   # should be overriden in inherited macro

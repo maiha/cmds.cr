@@ -37,10 +37,10 @@ describe "(basic usage)" do
     remove_ansi_color(shell.stderr).chomp.should eq("specify file")
   end
 
-  it "exits with the message and stacktrace when unhandled exception occurred" do
+  it "exits with the message" do
     shell = run("basic json fails")
     shell.success?.should be_false
-    remove_ansi_color(shell.stderr).chomp.should match(/unhandled error.*\n\s+from examples/)
+    remove_ansi_color(shell.stderr).chomp.should match(/unhandled error/)
   end
 end
 

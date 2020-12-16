@@ -12,6 +12,9 @@ describe "(args)" do
       usage: args math sum a b
              args math sum 1
 
+      examples:
+          -- no examples --
+
       missing <arg2>.
       EOF
   end
@@ -21,7 +24,11 @@ describe "(args)" do
       usage: args math sum a b
              args math sum x 2
 
+      examples:
+          -- no examples --
+
       Invalid Int32: x
       EOF
   end
 end
+      

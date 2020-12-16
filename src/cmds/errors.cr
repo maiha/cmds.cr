@@ -3,13 +3,45 @@ module Cmds
   class Abort         < Exception; end
   class ArgumentError < Exception; end
   
+  class ShowUsage < Navigatable
+    var exit_code : Int32 = 0
+
+    navigate <<-EOF
+      usage: {program} <command> ...
+
+      commands:
+          {commands}
+
+      examples:
+      {commands_usages}
+
+      {msg}
+      EOF
+  end
+
+  class ShowUsageWithTask < Navigatable
+    var exit_code : Int32 = 0
+
+    navigate <<-EOF
+      usage: {program} {command} {task} ...
+
+      examples:
+      {this_descs}
+
+      {msg}
+      EOF
+  end
+
   class MissingCommand < Navigatable
     navigate <<-EOF
       usage: {program} <command> ...
              {program} ^^^^^^^^^
 
       commands:
-        {commands}
+          {commands}
+
+      examples:
+      {commands_usages}
 
       missing <command>.
       EOF
@@ -21,7 +53,10 @@ module Cmds
              {program} {command}
 
       commands:
-        {commands}
+          {commands}
+
+      examples:
+      {commands_usages}
 
       invalid command: '{command}'
       EOF
@@ -33,7 +68,10 @@ module Cmds
              {program} {command} ^^^^^^
 
       tasks:
-        {tasks}
+          {tasks}
+
+      examples:
+      {this_descs}
 
       missing <task>.
       EOF
@@ -45,7 +83,10 @@ module Cmds
              {program} {command} {task}
 
       tasks:
-        {tasks}
+          {tasks}
+
+      examples:
+      {this_descs}
 
       invalid task: '{task}'
       EOF
@@ -56,7 +97,10 @@ module Cmds
       usage: {program} {command} {task} {args}
              {program} {command} {task} {argv}
 
-      {examples}{msg}
+      examples:
+      {this_task_descs}
+
+      {msg}
       EOF
   end
 
@@ -65,7 +109,10 @@ module Cmds
       usage: {program} {command} {task} {args}
              {program} {command} {task} {argv}
 
-      {examples}{msg}
+      examples:
+      {this_task_descs}
+
+      {msg}
       EOF
   end
 end

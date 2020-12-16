@@ -1,6 +1,5 @@
 # lib
 require "levenshtein"
-require "logger"
 
 # shards
 require "pretty"
