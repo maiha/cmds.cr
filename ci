@@ -1,6 +1,21 @@
-#!/bin/zsh
+#!/bin/bash
 
 set -eu
 
-for x in 0.27.2 0.31.1 0.32.1 0.33.0 0.34.0; (echo $x; crenv local $x && make examples && crystal s)
+function test() {
+  local version=$1
+  echo "----------------------------------------------------------------------"
+  echo "[$version]"
+  echo "----------------------------------------------------------------------"
+  
+  crenv local $version
+  make examples
+  crystal s
+}
+
+test 0.27.2
+test 0.33.0
+test 0.35.1
+test 0.36.1
+
 

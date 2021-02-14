@@ -4,7 +4,6 @@ abstract class Cmds::Cmd
   var read_arg_idx  : ::Int32       = 0
   var task_state    : ::Cmds::State = ::Cmds::State::BEFORE
   var error         : ::Exception
-  var logger        : ::Logger      = ::Logger.new(STDOUT)
 
   var task_name : ::String
   var prog_name : ::String = File.basename(PROGRAM_NAME)
@@ -130,16 +129,6 @@ abstract class Cmds::Cmd
     return array
   end
 
-  {% for name in Logger::Severity.constants %}
-    private def {{name.id.downcase}}(message)
-      name = String.build do |s|
-        s << self.class.cmd_name
-        s << " " << task_name if task_name?
-      end
-      logger.{{name.id.downcase}}(message, name)
-    end
-  {% end %}
-
   macro inherited
     def self.cmd_name
       NAME
@@ -193,3 +182,21 @@ abstract class Cmds::Cmd
     {% end %}
   end
 end
+
+# extend features for Logger if defined
+
+{% if @type.has_constant? "Logger" %}
+abstract class Cmds::Cmd
+  var logger        : ::Logger      = ::Logger.new(STDOUT)
+
+  {% for name in Logger::Severity.constants %}
+    private def {{name.id.downcase}}(message)
+      name = String.build do |s|
+        s << self.class.cmd_name
+        s << " " << task_name if task_name?
+      end
+      logger.{{name.id.downcase}}(message, name)
+    end
+  {% end %}
+end
+{% end %}
