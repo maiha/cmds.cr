@@ -125,7 +125,15 @@ usage: prog math sum a b
 missing <arg2>.
 ```
 
-### Filter
+## getopt
+
+```crystal
+debug = getopt_b("-d", default: false)
+host  = getopt_s?("--host=") || "localhost"
+port  = getopt_i32?("--port=") || 80
+```
+
+## Filter
 
 `before` and `after` methods will be automatically fired.
 See [examples/hello.cr](./examples/hello.cr).

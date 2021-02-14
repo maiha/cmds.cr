@@ -1,4 +1,8 @@
+require "./getopt"
+
 abstract class Cmds::Cmd
+  include Cmds::Getopt
+
   var args          : ::Array(String)
   var original_args : ::Array(String)
   var read_arg_idx  : ::Int32       = 0
