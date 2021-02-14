@@ -26,6 +26,16 @@ class Cmds::Cli
   # unhandled error
   def handle_error(cmd, err)
     STDERR.puts err.to_s.chomp.colorize(:red)
+    msg = err.to_s.chomp
+    if msg.empty?
+      msg = String.build do |s|
+        s << "#{err.class}"
+        if trace = err.backtrace?
+          s << "\n  #{trace.first}"
+        end
+      end
+    end
+    STDERR.puts msg.colorize(:red)
     exit 1
   end
 
