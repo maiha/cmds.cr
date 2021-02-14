@@ -3,7 +3,7 @@
 > [Simple](#Simple) | [Tasks](#Tasks) | [Navigate](#Navigate) | [Args](#Args) | [Filter](#Filter)
 
 A Crystal CLI library that absorbs most of the tedious processing required by the CLI and allows users to focus only on the essential logic.
-- [crystal](http://crystal-lang.org/) : 0.27.2 0.31.1 0.32.1 0.33.0 0.34.0
+- [crystal](http://crystal-lang.org/) : [tested versions](./ci)
 
 ### features
 - Simple and readable syntax for **command** and **task**
@@ -146,7 +146,7 @@ Add this to your application's `shard.yml`:
 dependencies:
   cmds:
     github: maiha/cmds.cr
-    version: 0.3.8
+    version: 0.4.0
 ```
 
 ```crystal
