@@ -133,7 +133,13 @@ host  = getopt_s?("--host=") || "localhost"
 port  = getopt_i32?("--port=") || 80
 ```
 
-## Filter
+## Single binary
+
+Use `program_command(prog, name)` rather than `command(name)` to create single binary like BusyBox.
+
+See [single-binary.cr](./examples/single-binary.cr) and [single-binary_spec.cr](./spec/examples/single-binary_spec.cr)
+
+## Callback
 
 `before` and `after` methods will be automatically fired.
 See [examples/hello.cr](./examples/hello.cr).

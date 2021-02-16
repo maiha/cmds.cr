@@ -9,11 +9,11 @@ def run(arg) : Shell::Seq
   return shell
 end
 
-def run!(arg) : Shell::Seq
-  shell = run(arg)
+macro run!(arg)
+  shell = run({{arg}})
   unless shell.success?
-    msg = shell.stderr.split(/\n/)[0..2].join("\n")
-    fail "(exit #{shell.exit_code}) #{arg}\n#{msg}".strip
+    msg = shell.stderr.split(/\n/)[0..3].join("\n")
+    fail "(exit #{shell.exit_code}) {{arg.id}}\n#{msg}".strip
   end
   shell
 end

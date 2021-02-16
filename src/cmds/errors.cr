@@ -2,6 +2,7 @@ module Cmds
   class Finished      < Exception; end
   class Abort         < Exception; end
   class ArgumentError < Exception; end
+  class CmdNotFound   < Exception; end
   
   class ShowUsage < Navigatable
     var exit_code : Int32 = 0

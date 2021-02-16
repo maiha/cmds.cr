@@ -4,13 +4,18 @@ class Cmds::Cli
   end
 
   def run(args)
-    cmd = Cmds[args.shift?].new
+    cmd = Cmds.cmd_table.resolve(args.shift?)
     cmd.run(args)
   rescue err
     handle_error(cmd, err)
   end
 
   def handle_error(cmd, err : Cmds::Finished)
+  end
+
+  def handle_error(cmd, err : Cmds::CmdNotFound)
+    STDERR.puts "#{err}: command not found"
+    exit 127
   end
 
   def handle_error(cmd, err : Cmds::Navigatable)

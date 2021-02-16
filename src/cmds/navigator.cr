@@ -10,7 +10,7 @@ module Cmds
 
     def navigate(template : String, vars = Hash(String, String).new) : String
       buf = template
-      cmd = Cmds[vars["command"]?.to_s]?
+      cmd = Cmds.cmd_table.resolve?(vars["command"]?)
 
       no_examples_message = "    -- no examples --"
       
@@ -35,7 +35,7 @@ module Cmds
         when "commands_usages"
           lines = Array(Array(String)).new
           Cmds.names.each do |cmd_name|
-            klass = Cmds::CMDS[cmd_name]
+            klass = Cmds.cmd_table.resolve(cmd_name)
             ary = [program, cmd_name]
             if first_usage = klass.usages[0]?
               ary << first_usage.text

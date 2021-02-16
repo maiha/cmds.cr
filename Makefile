@@ -3,23 +3,32 @@ SHELL=/bin/bash
 .SHELLFLAGS = -o pipefail -c
 
 SRCS=$(shell find src/ -name '*.cr')
+EXAMPLE_SRCS=$(wildcard examples/*.cr)
+EXAMPLE_BINS=$(patsubst examples/%.cr,tmp/%,$(EXAMPLE_SRCS))
 
 ######################################################################
 ### examples
 
 .PHONY: examples
-examples:
-	@mkdir -p tmp
-	@for cr in examples/*.cr; do \
-	  crystal build $$cr -o tmp/`basename $$cr .cr`; \
-	done
+examples: $(EXAMPLE_BINS)
 
 tmp/%: examples/%.cr $(SRCS)
 	@mkdir -p tmp
-	crystal build "$<" -o "$@"
+	@crystal build "$<" -o "$@"
+
+test-example/%: tmp/%
+	crystal spec spec/examples/$*_spec.cr
+
+test-single-binary: test-example/single-binary
 
 ######################################################################
 ### testing
+
+.PHONY: test
+test:
+	@rm -rf tmp
+	make -s examples
+	crystal spec --fail-fast
 
 .PHONY: ci
 ci: check_version_mismatch examples spec
